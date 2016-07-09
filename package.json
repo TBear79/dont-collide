@@ -1,0 +1,32 @@
+{
+  "name": "safe-following-distance",
+  "version": "1.0.0",
+  "description": "Ensures that function calls happens with a delay in between them in order to avoid \"crashes\" when calling a Service Bus or a store. Nothing to do with traffic :-)",
+  "main": "lib/safe-following-distance",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha test/."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TBear79/safe-following-distance.git"
+  },
+  "keywords": [
+    "Function",
+    "collision",
+    "function",
+    "queue",
+    "method",
+    "collision",
+    "method",
+    "queue"
+  ],
+  "author": "Thorbjørn Jelgren",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TBear79/safe-following-distance/issues"
+  },
+  "homepage": "https://github.com/TBear79/safe-following-distance#readme"
+}
