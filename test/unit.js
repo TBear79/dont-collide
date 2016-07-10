@@ -9,127 +9,82 @@ const assert = chai.assert;
 const expect = chai.expect;
 const sinon = require('sinon');
 
-const safeFollowingdistance = require('../lib/safe-following-distance.js');
+const dontCollide = require('../lib/dont-collide.js');
 
-describe('Time distance between calls', () => {
-	describe('Test if all function calls are made', function() {
+describe('Setup', () => {
+	describe('Test if parameters are transfered correctly', function() {
 		
-
 		
-		const rabbit = safeFollowingdistance(options);
+		before(function () { 
+		});
+		after(function () { 
+		});
 
-		// before(function () { 
-		// });
-		// after(function () { 
-		// });
+		it('should return correct parameters',  (done) => {
+			const dc = dontCollide();
+			let fn = (p1, p2, p3) => {
+				expect(p1).to.equal(10);
+				expect(p2).to.equal(11);
+				expect(p3).to.equal(12);	
 
-		// it('should return the correct message from queue',  (done) => {
-		// 	let connection; 
-		// 	let connectionCloseTimerId;
-		// 	const testContent = 'TESTING 123';
-		// 	const testCorrelationId = 'CORRELATIONIDTEST';
+				done();
+			}
+
+			dc.fire(fn,10,11,12);
+		});
+
+		it('should return correct results',  (done) => {
 			
-		// 	let msgCount = 0;
+			let cb = (results) => {
+				expect(results[0].correlationId).to.equal(20);
+				expect(results[1].correlationId).to.equal(30);
+				expect(results[2].correlationId).to.equal(40);	
 
-		// 	setTimeout(() => { rabbit.chat(testContent, { correlationId: testCorrelationId }); }, 50);
+				expect(results[0].result).to.equal('Mr. T');
+				expect(results[1].result).to.equal('Face');
+				expect(results[2].result).to.equal('Hannibal');
 
-		// 	return amqplib
-		// 		 .connect(options.protocol + '://' + options.host)
-		// 		.then((conn) => { connection = conn; return conn.createChannel(); })
-		// 		.then((channel) => {
-		// 			return channel.assertExchange(options.exchangeName, options.exchangeType, {durable: options.durable})
-		// 				.then((ok) => {
-		// 					return channel.assertQueue('', {exclusive: true})
-		// 			    				.then((q) => {
-		// 			    					channel.bindQueue(q.queue, options.exchangeName, '');
+				done();
+			}
 
-		// 			    					return channel.consume(q.queue, (msg) => {
-					    						
-		// 			    						msgCount++;
+			const dc = dontCollide({ finalize: cb });
 
-		// 			    						clearTimeout(connectionCloseTimerId);
+			dc.fire({ correlationId: 20, fn: () => { return 'Mr. T' }});
+			dc.fire({ correlationId: 30, fn: () => { return 'Face' }});
+			dc.fire({ correlationId: 40, fn: () => { return 'Hannibal' }});
+		});
 
-		// 								        connectionCloseTimerId = setTimeout(() => { 
-		// 								        	expect(msg.content.toString()).to.equal(testContent);
-		// 											expect(msg.properties.appId).to.equal(testAppId1);
-		// 											expect(msg.properties.correlationId).to.equal(testCorrelationId);
-		// 								        	expect(msgCount).to.equal(1);
-										        	
-		// 								        	connection.close(); 
-
-		// 								        	done();
-		// 								        }, 500);
-
-		// 								    }, {noAck: true});
-		// 			    				})
-
-		// 			  	});
-		// 		})
-		// 		.catch((ex) => { throw ex; });
-
+		it('should return correct result via callback for each result',  (done) => {
 			
-			
-		// });
+			let cb = (result) => {
+				expect(result.correlationId).to.equal(20);
+				expect(result.result).to.equal('Mr. T');
 
+				done();
+			}
 
+			const dc = dontCollide();
 
-		// it('should send 1000 messages and receive them all',  (done) => {
+			dc.fire({ correlationId: 20, fn: () => { return 'Mr. T' }, callback: cb});
+		});
 
-		// 	const numberOfMessagesToSend = 1000;
+		it('should return 1000 results',  (done) => {
+				
+				let cb = (results) => {
+					expect(results.length).to.equal(1000);
+					done();
+				}
 
-		// 	let connection; 
-		// 	let connectionCloseTimerId;
-		// 	let msgCount = 0;
+				const dc = dontCollide({ finalize: cb });
 
-		// 	setTimeout(() => { 
-		// 		let i = 0;
-		// 		let tmpTimer;
-
-		// 		tmpTimer = setInterval(() => { 
-		// 			setTimeout(() => { rabbit.chat("TESTING"); }, 50);
-		// 			i++; 
-		// 			if(i >= numberOfMessagesToSend) 
-		// 				clearInterval(tmpTimer);
-		// 		}, 1);
-
-					
-		// 	}, 500);
-
-		// 	return amqplib
-		// 		 .connect(options.protocol + '://' + options.host)
-		// 		.then((conn) => { connection = conn; return conn.createChannel(); })
-		// 		.then((channel) => {
-		// 			return channel.assertExchange(options.exchangeName, options.exchangeType, {durable: options.durable})
-		// 				.then((ok) => {
-		// 					return channel.assertQueue('', {exclusive: true})
-		// 			    				.then((q) => {
-		// 			    					channel.bindQueue(q.queue, options.exchangeName, '');
-
-		// 			    					return channel.consume(q.queue, (msg) => {
-					    						
-		// 			    						msgCount++;
-
-		// 			    						clearTimeout(connectionCloseTimerId);
-
-		// 								        connectionCloseTimerId = setTimeout(() => { 
-		// 								        	expect(msgCount).to.equal(numberOfMessagesToSend);
-										        	
-		// 								        	connection.close(); 
-
-		// 								        	done();
-		// 								        }, 500);
-
-		// 								    }, {noAck: true});
-		// 			    				})
-
-		// 			  	});
-		// 		})
-		// 		.catch((ex) => { throw ex; });
-		// });
-
-		
-
+				for(let i = 1; i <= 1000; i++){
+					dc.fire({ correlationId: 20, fn: () => { return i; }});
+				}
+		});
 
 	});
+
+	
+
 });
 

@@ -1,8 +1,8 @@
 {
-  "name": "safe-following-distance",
+  "name": "dont-collide",
   "version": "1.0.0",
   "description": "Ensures that function calls happens with a delay in between them in order to avoid \"crashes\" when calling a Service Bus or a store. Nothing to do with traffic :-)",
-  "main": "lib/safe-following-distance",
+  "main": "lib/dont-collide.js",
   "directories": {
     "test": "test"
   },
@@ -11,22 +11,23 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/TBear79/safe-following-distance.git"
+    "url": "git+https://github.com/TBear79/dont-collide.git"
   },
   "keywords": [
-    "Function",
-    "collision",
     "function",
+    "collision",
     "queue",
     "method",
-    "collision",
-    "method",
-    "queue"
+    "dont-collide"
   ],
   "author": "Thorbjørn Jelgren",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/TBear79/safe-following-distance/issues"
+    "url": "https://github.com/TBear79/dont-collide/issues"
   },
-  "homepage": "https://github.com/TBear79/safe-following-distance#readme"
+  "homepage": "https://github.com/TBear79/dont-collide#readme",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "sinon": "^1.17.4"
+  }
 }
