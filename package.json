@@ -1,7 +1,7 @@
 {
   "name": "dont-collide",
   "version": "1.0.0",
-  "description": "Ensures that function calls happens with a delay in between them in order to avoid \"crashes\" when calling a Service Bus or a store. Nothing to do with traffic :-)",
+  "description": "This throttling module prevents that function calls happens with a delay in between them in order to avoid \"collisions\" when calling a Service Bus or a store. Nothing to do with traffic though :-)",
   "main": "lib/dont-collide.js",
   "directories": {
     "test": "test"
@@ -14,10 +14,11 @@
     "url": "git+https://github.com/TBear79/dont-collide.git"
   },
   "keywords": [
-    "function",
+    "throttle",
+    "throttling",
+    "function queue",
+    "method queue",
     "collision",
-    "queue",
-    "method",
     "dont-collide"
   ],
   "author": "Thorbjørn Jelgren",
