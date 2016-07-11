@@ -67,30 +67,38 @@ describe('Unit tests', () => {
 		});
 
 		it('should return correct result for async functions',  (done) => {
-			
-			let final1 = (result) => {
-				expect(result.correlationId).to.equal(20);
-				expect(result.result).to.equal('Mr. T');
+			let counter = 0;
+			let final1 = (greeting, cid, rs) => {
+				counter++;
+				expect(cid).to.equal(20);
+				expect(rs).to.equal('Mr. T');
+				expect(greeting).to.equal('Hi');
 			}
 
-			let final2 = (result) => {
-				expect(result.correlationId).to.equal(30);
-				expect(result.result).to.equal('Hannibal');
+			let final2 = (greeting, cid, rs) => {
+				counter++;
+				expect(cid).to.equal(30);
+				expect(rs).to.equal('Hannibal');
+				expect(greeting).to.equal('Hello');
+				expect(counter).to.equal(3);
 				done();
 			}
 
-			let final3 = (result) => {
-				expect(result.correlationId).to.equal(40);
-				expect(result.result).to.equal('Face');
+			let final3 = (greeting, cid, rs) => {
+				counter++;
+				expect(cid).to.equal(40);
+				expect(rs).to.equal('Face');
+				expect(greeting).to.equal('Good day');
 			}
 
 
 			const dc = dontCollide();
 
-			dc.throttle({ correlationId: 20, fn: function(cid, c) { setTimeout(() => { c({ correlationId: cid, result: 'Mr. T' }); }, 1 ); }, asyncCallback: final1 });
-			dc.throttle({ correlationId: 30, fn: function(cid, c) { setTimeout(() => { c({ correlationId: cid, result: 'Hannibal' }); }, 100 ); }, asyncCallback: final2});
-			dc.throttle({ correlationId: 40, fn: function(cid, c) { setTimeout(() => { c({ correlationId: cid, result: 'Face' }); }, 50 ); }, asyncCallback: final3});
+			dc.throttle({ correlationId: 20, fn: function(greeting, cid, c) { setTimeout(() => { c(greeting, cid, 'Mr. T'); }, 1 ); }, asyncCallback: final1 }, 'Hi');
+			dc.throttle({ correlationId: 30, fn: function(greeting, cid, c) { setTimeout(() => { c(greeting, cid, 'Hannibal'); }, 100 ); }, asyncCallback: final2}, 'Hello');
+			dc.throttle({ correlationId: 40, fn: function(greeting, cid, c) { setTimeout(() => { c(greeting, cid, 'Face'); }, 50 ); }, asyncCallback: final3}, 'Good day');
 		});
+
 
 		it('should return 1000 results',  (done) => {
 				
