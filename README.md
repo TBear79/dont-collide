@@ -6,8 +6,8 @@ Use it to prevent collisions and "denial of service" when sending data in a loop
 
 * Easy to use and fast to implement
 * Ultra lightweight
-* Support for sum function return data as array
-* Support for function return data to be returned in a callback for each function call
+* Option to return function data as an array when finished or to return data for every call
+* Suppport for returning data through asyncronous callbacks
 
 ## Basic usage
 
@@ -100,6 +100,32 @@ CorrelationId: 40
 Result: Hannibal
 */
 ```
+
+## Usage for asynchronous calls
+
+```javascript
+var dontCollide = require('dont-collide');
+
+let cb = function(greeting, cid, rs) {
+	console.log(cid + ": " + greeting + " " + rs);
+}
+
+
+const dc = dontCollide();
+
+dc.throttle({ correlationId: 20, fn: function(greeting, cid, c) { setTimeout(() => { c(greeting, cid, 'Mr. T'); }, 1 ); }, asyncCallback: cb }, 'Hi');
+dc.throttle({ correlationId: 30, fn: function(greeting, cid, c) { setTimeout(() => { c(greeting, cid, 'Hannibal'); }, 100 ); }, asyncCallback: cb}, 'Hello');
+dc.throttle({ correlationId: 40, fn: function(greeting, cid, c) { setTimeout(() => { c(greeting, cid, 'Face'); }, 50 ); }, asyncCallback: cb}, 'Good day');
+
+/*
+Outputs:
+
+20: Hi Mr. T
+40: Good day Face
+30: Hello Hannibal
+
+*/
+```
 ## Instance options
 
 You can of course provide options for setting up dont-collide.
@@ -178,7 +204,23 @@ Outputs
 
 You can always pass parameters by sending a parameter list after the options (or your function).
 
+### asyncCallback
 
+Function
+
+Default: null
+
+When using asyncCallback two more parameters are added to the parameter list of your function call. The correlationId and the async callback.
+
+```javascript
+dc.throttle({ correlationId: 40, fn: function(greeting, cid, c) { setTimeout(() => { c(greeting, cid, 'Face'); }, 50 ); }, asyncCallback: function(greeting, cid, rs){console.log(cid + ": " + greeting + " " + rs);}}, 'Good day');
+
+/*
+Outputs
+
+30: Hello Hannibal
+*/
+```
 ### callback
 
 Function
