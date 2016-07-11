@@ -30,10 +30,10 @@ describe('Setup', () => {
 				done();
 			}
 
-			dc.fire(fn,10,11,12);
+			dc.throttle(fn,10,11,12);
 		});
 
-		it('should return correct results',  (done) => {
+		it('should return correct results as an array',  (done) => {
 			
 			let cb = (results) => {
 				expect(results[0].correlationId).to.equal(20);
@@ -49,9 +49,9 @@ describe('Setup', () => {
 
 			const dc = dontCollide({ finalize: cb });
 
-			dc.fire({ correlationId: 20, fn: () => { return 'Mr. T' }});
-			dc.fire({ correlationId: 30, fn: () => { return 'Face' }});
-			dc.fire({ correlationId: 40, fn: () => { return 'Hannibal' }});
+			dc.throttle({ correlationId: 20, fn: () => { return 'Mr. T' }});
+			dc.throttle({ correlationId: 30, fn: () => { return 'Face' }});
+			dc.throttle({ correlationId: 40, fn: () => { return 'Hannibal' }});
 		});
 
 		it('should return correct result via callback for each result',  (done) => {
@@ -65,7 +65,7 @@ describe('Setup', () => {
 
 			const dc = dontCollide();
 
-			dc.fire({ correlationId: 20, fn: () => { return 'Mr. T' }, callback: cb});
+			dc.throttle({ correlationId: 20, fn: () => { return 'Mr. T' }, callback: cb});
 		});
 
 		it('should return 1000 results',  (done) => {
@@ -78,7 +78,7 @@ describe('Setup', () => {
 				const dc = dontCollide({ finalize: cb });
 
 				for(let i = 1; i <= 1000; i++){
-					dc.fire({ correlationId: 20, fn: () => { return i; }});
+					dc.throttle({ correlationId: 20, fn: () => { return i; }});
 				}
 		});
 
