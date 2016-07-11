@@ -11,10 +11,8 @@ const sinon = require('sinon');
 
 const dontCollide = require('../lib/dont-collide.js');
 
-describe('Setup', () => {
+describe('Unit tests', () => {
 	describe('Test if parameters are transfered correctly', function() {
-		
-		
 		before(function () { 
 		});
 		after(function () { 
@@ -66,6 +64,32 @@ describe('Setup', () => {
 			const dc = dontCollide();
 
 			dc.throttle({ correlationId: 20, fn: () => { return 'Mr. T' }, callback: cb});
+		});
+
+		it('should return correct result for async functions',  (done) => {
+			
+			let final1 = (result) => {
+				expect(result.correlationId).to.equal(20);
+				expect(result.result).to.equal('Mr. T');
+			}
+
+			let final2 = (result) => {
+				expect(result.correlationId).to.equal(30);
+				expect(result.result).to.equal('Hannibal');
+				done();
+			}
+
+			let final3 = (result) => {
+				expect(result.correlationId).to.equal(40);
+				expect(result.result).to.equal('Face');
+			}
+
+
+			const dc = dontCollide();
+
+			dc.throttle({ correlationId: 20, fn: function(cid, c) { setTimeout(() => { c({ correlationId: cid, result: 'Mr. T' }); }, 1 ); }, asyncCallback: final1 });
+			dc.throttle({ correlationId: 30, fn: function(cid, c) { setTimeout(() => { c({ correlationId: cid, result: 'Hannibal' }); }, 100 ); }, asyncCallback: final2});
+			dc.throttle({ correlationId: 40, fn: function(cid, c) { setTimeout(() => { c({ correlationId: cid, result: 'Face' }); }, 50 ); }, asyncCallback: final3});
 		});
 
 		it('should return 1000 results',  (done) => {
