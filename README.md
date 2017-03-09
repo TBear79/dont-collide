@@ -255,6 +255,7 @@ Then run:
 
 #Release notes
 
+* 1.0.1 - Changed default finalize prop from arrow function to function.
 * 1.0.0 - First working version
 
 #Keywords
