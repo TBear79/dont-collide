@@ -1,6 +1,6 @@
 {
   "name": "dont-collide",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "This throttling module prevents that function calls happens with a delay in between them in order to avoid \"collisions\" when calling a Service Bus or a store. Nothing to do with traffic though :-)",
   "main": "lib/dont-collide.js",
   "directories": {
